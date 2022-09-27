@@ -1,8 +1,6 @@
 package com.nn.pageObjects;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 
@@ -19,10 +17,5 @@ public class BatchPage extends CommonElement {
 		PageFactory.initElements(driver,this);
 	}
 	
-	public String GetSuccessMessage() {
-		WebElement MsgElement = driver.findElement(By.xpath("//p-toast//p-toastitem"));
-		String Msg = MsgElement.getText();
-		return Msg;
-	}
 	
 }

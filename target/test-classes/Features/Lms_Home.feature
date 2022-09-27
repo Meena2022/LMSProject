@@ -14,9 +14,9 @@ Feature: Homepage functionality
       | Logout     |
   
 
-  #Scenario: Validate program,batch,user,assignment an attendance menu button functionality
-    #Given User logged on and landed on Home page
-    When User click on program button
+  Scenario: Validate program,batch,user,assignment an attendance menu button functionality
+   Given User is logged on to LMS website
+    When User click on program buttone
     Then Landed on Program page
     When User click on Batch button
     Then Landed on Batch page

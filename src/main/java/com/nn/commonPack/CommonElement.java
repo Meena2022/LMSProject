@@ -17,11 +17,9 @@ public class CommonElement {
 	Actions action;
 	
 	public CommonElement(WebDriver wdriver) {
-		System.out.println("Home page constructor");
 		driver=wdriver;
 		action =new Actions(driver);
 		PageFactory.initElements(driver,this);
-		System.out.println("Common Element constructor");
 	}
 	
 	//Page Common Header Element
@@ -35,7 +33,6 @@ public class CommonElement {
 	@FindBy(xpath="//thead/tr[1]/th[1]") WebElement checkBoxMultipleSelect;
 	@FindBy(xpath="//mat-card-title//button[@icon='pi pi-trash']") WebElement iconMultipleDelete;
 	
-	//@FindBy(xpath="//mat-card-title/div[2]//button[@icon=\"pi pi-trash\"]") WebElement btnDeleteAll;
 	@FindBys({
 		@FindBy(xpath = "//table//p-sorticon") 
 	}) List<WebElement> btnSort;
@@ -101,6 +98,11 @@ public class CommonElement {
 		}
 		if (Page.equalsIgnoreCase("Assignment")) {
 			if (tblHeading.contains("Assignment Name") && tblHeading.contains("Assignment Grade")){
+				return true;}
+		}
+		
+		if (Page.equalsIgnoreCase("User")) {
+			if (tblHeading.contains("Id") && tblHeading.contains("Email") && tblHeading.contains("Contact")){
 				return true;}
 		}
 		return false;
@@ -237,7 +239,7 @@ public class CommonElement {
 		action.moveToElement(btnLastspage).click().build().perform();
 	}
 	
-	//Sucess Message Popup
+	//Success Message Popup
 	
 	public String GetSuccessMessage() {
 		WebElement MsgElement = driver.findElement(By.xpath("//p-toast//p-toastitem"));

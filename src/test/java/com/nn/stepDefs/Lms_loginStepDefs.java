@@ -6,10 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Map;
 
-import org.openqa.selenium.WebDriver;
 
 import com.nn.base.Base;
-import com.nn.pageObjects.HomePage;
 import com.nn.pageObjects.LoginPage;
 
 import io.cucumber.datatable.DataTable;
@@ -19,16 +17,7 @@ import io.cucumber.java.en.*;
 
 public class Lms_loginStepDefs extends Base{
 	LoginPage loginPage;
-	//HomePage homePage;
-	
-	
-	
-	public Lms_loginStepDefs() {
-		//this.loginPage=loginPage;
-		//this.homePage-homePage;
-	}
-	
-   /*
+   
 	@Before
 	public void OpenBrowser() {
 		SetupBrowser();
@@ -38,13 +27,11 @@ public class Lms_loginStepDefs extends Base{
 	public void CloseBrowser() {
 		BrowserTearDown();
 	}
-	*/
+	
 	@Given("User is on the browser")
 	public void user_is_on_the_browser() {
-		SetupBrowser();
 		loginPage=new LoginPage(driver);
-		//loginPage=new LoginPage();
-
+		assertEquals("WebPage failed to load",appUrl, loginPage.getUrl() );
 
 	}
 
@@ -58,10 +45,7 @@ public class Lms_loginStepDefs extends Base{
 		assertTrue("Login page is not loaded", loginPage.isLoginPageVisible());
 	}
 
-	@Given("User is on the Login page")
-	public void user_is_on_the_login_page() {
-		assertEquals("WebPage failed to load",appUrl, loginPage.getUrl() );
-	}
+	
 
 	@When("User clicks the Login button after entering invalid credentails")
 	public void user_clicks_the_login_button_after_entering_invalid_credentails(DataTable dataTable) throws InterruptedException {
@@ -94,7 +78,6 @@ public class Lms_loginStepDefs extends Base{
 	@Then("User should see the LMS Home page")
 	public void user_should_see_the_lms_home_page()  {
 		assertEquals("Failed to login with valid credentails",homeUrl , loginPage.getUrl());
-		BrowserClose();
 	}
 }
 	

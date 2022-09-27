@@ -1,10 +1,8 @@
 package com.nn.pageObjects;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.Element;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +10,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
@@ -82,8 +79,6 @@ public class HomePage {
 	public HomePage(WebDriver wdriver) {
 		driver=wdriver;
 		action =new Actions(driver);
-		Wdwait = new WebDriverWait(driver,Duration.ofSeconds(30));
-
 		PageFactory.initElements(driver,this);
 	}
 
@@ -117,22 +112,20 @@ public class HomePage {
 		return new ProgramPage(driver);
 	}
 
-	public void ClickBatchMenu(){
+	public BatchPage ClickBatchMenu(){
 		action.moveToElement(btnBatch).click().build().perform();
-		//return new BatchPage(driver);
+		return new BatchPage(driver);
 
 	}
 
-	public void ClickUserMenu(){
+	public UserPage ClickUserMenu(){
 		action.moveToElement(btnUser).click().build().perform();
-		//return new UserPage(driver);
+		return new UserPage(driver);
 	}
 
-	public void ClickAssignmentMenu(){
-		Wdwait.until(ExpectedConditions.visibilityOf(lblToalCount));
+	public AssignmentPage ClickAssignmentMenu(){
 		action.moveToElement(btnAssignment).click().build().perform();
-
-		//return new AssignmentPage(driver);
+		return new AssignmentPage(driver);
 	}
 	
 	public void ClickAttendanceMenu(){

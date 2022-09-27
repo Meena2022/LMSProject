@@ -7,13 +7,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import com.nn.base.Base;
 
 
 public class LoginPage  {
 	WebDriver driver;
 	Actions action;
-	private Base b;
 
 	@FindBy(id="username")  WebElement txtUser;
 	@FindBy(id="password")  WebElement txtPwd;

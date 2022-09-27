@@ -51,28 +51,30 @@ Feature: Add/Edit/Update/Delete/Multiple Delete/search functionality of Batch Pa
       | Message    |
       | Batches Deleted |
 
-  Scenario: Check the Program page functionality of Header,Sort order,Footer and Pagination
-   Given User is on Batch page
+Scenario: Check the Program page functionality of Header,Sort order,Footer and Pagination of Batch page
+    #Header ,Footer of Program Page
+    Given User is on Batch page
     When Batch page display all the details
     Then User should see the title of the Batch page as "Manage Batch"
-    And User should see the disabled Icon of multiple program deletion
-    And User should see the search box
-    And User should see the add new button as "A New Batch"
-    And User should see the entries label format as "Showing 1 to 5 of 25 entries"
-    And User should see the total program count format as "In total there are 25 batches."
-    When User clicks on the Ascending or Descending arrow button
+    And User should see the disabled Icon of multiple Batch deletion
+    And User should see the search box for Batch page
+   	And User should see the add new button as "A New Batch" on Batch page
+    And User should see the entries label format as "Showing 1 to 5 of 25 entries" on Batch page
+    And User should see the total program count format as "In total there are 25 batches." on Batch page
+    When User clicks on the Ascending or Descending arrow button on Batch page
       | Batch Name        |
       | Batch Description |
       | Batch Status      |
       | No Of Classes     |
       | Program Name      |
-    Then User can see the results in Ascending or Descending order
-    When Table displays the page 1 content
-    Then pagination previous link is disabled
-    When User clicks navigate next page button
-    Then User navigated to next page number 2
-    When User clicks navigate previous page button
-    Then User navigated to previous page number 1
-    When User is on last page
-    Then pagination next link is disabled
-   
+    Then User can see the results in Ascending or Descending order on Batch page
+    When Table displays the page 1 content on Batch page
+    Then pagination previous link is disabled on Batch page
+    When User clicks navigate next page button on Batch page
+    Then User navigated to next page number 2 on Batch page
+    When User clicks navigate previous page button on Batch page
+    Then User navigated to previous page number 1 on Batch page
+    When User is on last page of program page
+    Then pagination next link is disabled on Batch page
+
+  
