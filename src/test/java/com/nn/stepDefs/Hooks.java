@@ -1,14 +1,7 @@
 package com.nn.stepDefs;
 
-import org.openqa.selenium.chrome.ChromeDriver;
 
-import com.nn.base.Base;
-
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.github.bonigarcia.wdm.WebDriverManager;
-
-public class Hooks extends Base{
+public class Hooks {
 	/*
 	private Base b;
 	

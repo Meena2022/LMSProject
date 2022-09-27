@@ -1,19 +1,15 @@
 package com.nn.commonPack;
 
-import java.time.Duration;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AssignmentSaveEditPage {
 	WebDriver driver;
 	Actions action;
-	WebDriverWait Wdwait;
 	
 	@FindBy(id="assignment") WebElement txtAssignment;
 
@@ -34,7 +30,6 @@ public class AssignmentSaveEditPage {
 		System.out.println("Home page constructor");
 		driver=wdriver;
 		action =new Actions(driver);
-		Wdwait = new WebDriverWait(driver,Duration.ofSeconds(30));
 
 		PageFactory.initElements(driver,this);
 	}
@@ -42,7 +37,6 @@ public class AssignmentSaveEditPage {
 	
 						
 	public boolean IsProgramDialogVisible() {
-		Wdwait.until(ExpectedConditions.visibilityOf(PageDialog));
 
 		return PageDialog.isDisplayed();
 	}
@@ -51,7 +45,7 @@ public class AssignmentSaveEditPage {
 		return lblDialogTitle.getText();
 	}
 	
-	public void EnterAssignmentDetails(String name,String desc,String grade) {
+	public void EnterAssignmentDetails(String name,String desc,String due,String grade) {
 		txtAssignment.clear();
 		txtAssignment.sendKeys(name);
 		txtAssignDesc.clear();
@@ -62,7 +56,6 @@ public class AssignmentSaveEditPage {
 	}
 	
 	public void ClickConfirmation(String status)  {
-		Wdwait.until(ExpectedConditions.visibilityOf(btnSave));
 
 		if (status.equalsIgnoreCase("Save")) {
 			action.moveToElement(btnSave).click().build().perform();

@@ -12,10 +12,13 @@ public class AssignmentPage extends CommonElement{
 	Actions action;
 	
 	public AssignmentPage(WebDriver wdriver) {
+		
 		super(wdriver);
 		driver=wdriver;
 		action =new Actions(driver);
 		PageFactory.initElements(driver,this);
+		
 	}
+	
 	
 }
