@@ -5,16 +5,25 @@
   <version>0.0.1-SNAPSHOT</version>
   <description>Learning Management</description>
 
+		<properties>
+				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+				<maven.compiler.source>17</maven.compiler.source>
+				<maven.compiler.target>17</maven.compiler.target>
+		</properties>
+
+	
 
 	    <dependencies>
 
-			<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-junit -->
+			
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-junit -->
 			<dependency>
 				<groupId>io.cucumber</groupId>
 				<artifactId>cucumber-junit</artifactId>
 				<version>7.3.4</version>
 				<scope>test</scope>
 			</dependency>
+
 			<dependency>
 			    <groupId>io.cucumber</groupId>
 			    <artifactId>cucumber-java</artifactId>
@@ -29,6 +38,15 @@
 				<version>7.4.1</version>
 			</dependency>
 	  
+			<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-picocontainer -->
+			<dependency>
+			    <groupId>io.cucumber</groupId>
+			    <artifactId>cucumber-picocontainer</artifactId>
+			    <version>7.8.1</version>
+			    <scope>test</scope>
+			</dependency>
+
+
 			<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
 			<dependency>
 	    		<groupId>io.github.bonigarcia</groupId>
@@ -51,22 +69,49 @@
 			    <scope>test</scope>
 			</dependency>
 	
+			<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber7-jvm -->
 			<dependency>
-				<groupId>com.aventstack</groupId>
-				<artifactId>extentreports</artifactId>
-				<version>5.0.9</version>
+			    <groupId>io.qameta.allure</groupId>
+			    <artifactId>allure-cucumber7-jvm</artifactId>
+			    <version>2.19.0</version>
 			</dependency>
-			
-				<!-- For basic java assertion -->
-			<dependency> 
-			    <groupId>org.assertj</groupId>
-			    <artifactId>assertj-core</artifactId>
-			    <version>3.4.1</version>
-			    <scope>test</scope>
+
+			<!-- https://mvnrepository.com/artifact/tech.grasshopper/extent-pdf-report -->
+
+			<dependency>
+				<groupId>tech.grasshopper</groupId>
+				<artifactId>extentreports-cucumber7-adapter</artifactId>
+				<version>1.5.1</version>
 			</dependency>
-			
+
+			<!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
+			<dependency>
+			    <groupId>com.aventstack</groupId>
+			    <artifactId>extentreports</artifactId>
+			    <version>5.0.9</version>
+			</dependency>
+
+			<!-- While running as 17 source/target it shows complie error..This depandancy resolved the complier error -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+  				<artifactId>lombok</artifactId>
+  				<version>1.18.22</version>
+			</dependency>
  	    </dependencies>
 
-		
+		<build>
+			<plugins>
+				<plugin>
+					<!-- <groupId>org.apache.maven.plugins</groupId>-->
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+	                  <encoding>${project.build.sourceEncoding}</encoding>
+	                </configuration>
+				</plugin>
+	       </plugins>
+	
+		</build>	
+			
 
 </project>

@@ -1,18 +1,24 @@
 package com.nn.base;
 
-import java.time.Duration;
 import java.util.Random;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.nn.pageObjects.AssignmentPage;
+import com.nn.pageObjects.BatchPage;
+import com.nn.pageObjects.HomePage;
+import com.nn.pageObjects.LoginPage;
+import com.nn.pageObjects.UserPage;
 import com.nn.utility.ReadConfigFile;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Base {
 	ReadConfigFile rConfig = new ReadConfigFile();
-	public WebDriver driver;		
+	public static WebDriver driver;		
+	public static WebDriverWait Wdwait;
+	
+
 	public String appUrl=rConfig.getLMSUrl();
 	public String browserName=rConfig.getBrowser();
 	public String userName=rConfig.getUserName();
@@ -20,34 +26,12 @@ public class Base {
 	
 	public String homeUrl=rConfig.getHomePageUrl();
 	
-		
-	
-	public  void SetupBrowser() {
-		System.out.println("Base SetupBrowser "+driver);
-
-		WebDriverManager.chromedriver().setup();
-		driver=new ChromeDriver();
-		driver.get(appUrl);
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-		//driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-		driver.manage().window().maximize();
-
-	}
-	
-	public  void BrowserClose() {
-		driver.close();
-
-	}
-
-	public  void BrowserTearDown() {
-		driver.close();
-		driver.quit();
-
-	}
+	public Base() {
+		}
 	
 	public int getRandomIndex(int limit) {
 		Random random =new Random();
-		return random.nextInt(limit-1);
+		return random.nextInt(limit);
 	}
 	
 }

@@ -5,16 +5,19 @@ package com.nn.commonPack;
 
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class BatchSaveEditPage {
+import com.nn.base.Base;
 
-	WebDriver driver;
+public class BatchSaveEditPage extends Base{
+
+	//WebDriver driver;
 	Actions action;
 	
 	@FindBy(xpath= "//input[@id='batchName']")
@@ -25,7 +28,9 @@ public class BatchSaveEditPage {
 	
 	@FindBy(xpath= "//div[3]/p-dropdown/div/div[2]")
 	WebElement dropdownBatchProgram;
-
+	
+	
+	
 	@FindBy(xpath= "//div[2]/p-radiobutton")
 	WebElement radBatchActiveStatus;
 
@@ -48,125 +53,76 @@ public class BatchSaveEditPage {
 	WebElement firstdrpdownElement;
 	
 	@FindBys({
-		@FindBy(xpath = "//p-dropdown//p-dropdownitem//li/span") 
+		@FindBy(xpath = "//p-dropdownitem//li']") 
 	})List<WebElement> programList;
-	 //
+	 
+	
 	@FindBy(xpath="//div[@role='dialog']") WebElement PageDialog;
 	@FindBy(xpath="//p-dialog//div[@role='dialog']/div/span") WebElement lblDialogTitle;
+	
 
-	public boolean IsPrageeDialogVisible() {
-		return PageDialog.isDisplayed();
+	public BatchSaveEditPage( ) {
+		action =new Actions(driver);
+		PageFactory.initElements(driver,this);
 	}
 	
+	public boolean IsPageDialogVisible() {
+		Wdwait.until(ExpectedConditions.visibilityOf(PageDialog));
+		return PageDialog.isDisplayed();
+	}
 	public String getDetailFormTitle() {
 		return lblDialogTitle.getText();
 	}
 	
-	//
-	public BatchSaveEditPage(WebDriver wdriver) {
-		System.out.println("Home page constructor");
-		driver=wdriver;
-		action =new Actions(driver);
-		PageFactory.initElements(driver,this);
-
-	}
 	
-	public void clickSave()
-	{
+	public String clickSave(){
 		action.moveToElement(btnSave).click().build().perform();
+		Wdwait.until(ExpectedConditions.invisibilityOf(btnSave));
+
+		WebElement MsgElement = driver.findElement(By.xpath("//p-toast//p-toastitem"));
+		return MsgElement.getText();
 	}
 
-	public void clickCancel()
-	{
+	public String clickCancel(){
 		action.moveToElement(btnCancel).click().build().perform();
-
-	}
-	
-	public void setBatchName(String batchname)
-	{
-		System.out.println("batchname");
-		txtBatchName.clear();
-		txtBatchName.sendKeys(batchname);
-		
+		return "NA";
 	}
 
-	public void setBatchDesc(String batchdesc)
-	{
-		txtBatchDescription.clear();
-		txtBatchDescription.sendKeys(batchdesc);
-	}
 	
-	public void selectBatchProgram(String ProgramName)
-	{
+	public void selectBatchProgram(String ProgramName){
 		dropdownBatchProgram.click();
-		action.moveToElement(firstdrpdownElement).click().build().perform();
-		/*List<String> dropDownList = new ArrayList<String>();
+		List<WebElement> programList = driver.findElements(By.xpath("//p-dropdownitem//li"));
 		for(WebElement item:programList){
-		if ( item.getText() == ProgramName) 
-		{
-			System.out.println(item.getText());
-			action.moveToElement(item).click().build().perform();
+			if (item.getText().equalsIgnoreCase(ProgramName)) {
+					action.moveToElement(item).click().build().perform();
+					break;}
 		}
-			
-			
-		}*/
-	
 	}
 	
-	public void clickRadActive()
-	{
-		radBatchActiveStatus.click();
-	}
-	public void clickRadInactive()
-	{
-		radBatchInActiveStatus.click();
-	}
 
-	public void setBatchNoClasses(int batchclasses)
-	{
-		txtBatchNoClasses.clear();
-		txtBatchNoClasses.sendKeys(Integer.toString(batchclasses));
-	}
-	
-	public String getMessage(String Message)
-	{
+	public String getMessage(String Message){
 		return txtMessage.getText();
 	}
 	
-	public void verifyFieldsDisplay()
-	{
-		
-		
-		
-	}
-	public void selectBatchStatus()
-	{
-		// Admin selects Batch status
-				boolean status = radBatchActiveStatus.isSelected();
+	
+	public void selectBatchStatus(String BatchStatus){
+		if (BatchStatus.equalsIgnoreCase("Active")) {
+			action.moveToElement(radBatchActiveStatus).click().build().perform();
+		}else {
+			action.moveToElement(radBatchInActiveStatus).click().build().perform();
+		}
 
-				if (status == true) {
-					radBatchActiveStatus.click();
-				} else {
-					radBatchInActiveStatus.click();
-				}
 	}
 	
-public void addBatch(String batchName, String batchDesc, String batchStatus, String batchNoOfClasses) {
-		
+	
+	public void addBatch(String batchName, String batchDesc,String ProgramName,String batchStatus, int batchNoOfClasses) {
+		txtBatchName.clear();
 		txtBatchName.sendKeys(batchName);
+		txtBatchDescription.clear();
 		txtBatchDescription.sendKeys(batchDesc);
-		
-		if(batchStatus.equalsIgnoreCase("Active")) {
-			
-			if(!radBatchActiveStatus.isSelected())
-				radBatchActiveStatus.click();
-		}
-		
-		else if(batchStatus.equalsIgnoreCase("InActive")) {
-			
-			if(!radBatchInActiveStatus.isSelected())
-				radBatchInActiveStatus.click();
-		}
-		
-}
+		selectBatchProgram(ProgramName);
+		selectBatchStatus(batchStatus);
+		txtBatchNoClasses.clear();
+		txtBatchNoClasses.sendKeys(Integer.toString(batchNoOfClasses));
+	}
 }

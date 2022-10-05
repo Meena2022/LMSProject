@@ -4,21 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.nn.base.Base;
 
 
-public class HomePage {
+public class HomePage extends Base {
 
-	WebDriver driver;
 	Actions action;
 	
-	WebDriverWait Wdwait;
 	
 	@FindBy(xpath="//mat-toolbar/span[1]") WebElement homepageHeading;
 	@FindBys({
@@ -76,8 +74,7 @@ public class HomePage {
 	
 	// Menu button click
 	
-	public HomePage(WebDriver wdriver) {
-		driver=wdriver;
+	public HomePage( ) {
 		action =new Actions(driver);
 		PageFactory.initElements(driver,this);
 	}
@@ -109,23 +106,23 @@ public class HomePage {
 
 	public ProgramPage ClickProgramMenu(){
 		action.moveToElement(btnProgram).click().build().perform();
-		return new ProgramPage(driver);
+		return new ProgramPage();
 	}
 
 	public BatchPage ClickBatchMenu(){
 		action.moveToElement(btnBatch).click().build().perform();
-		return new BatchPage(driver);
+		return new BatchPage();
 
 	}
 
 	public UserPage ClickUserMenu(){
 		action.moveToElement(btnUser).click().build().perform();
-		return new UserPage(driver);
+		return new UserPage();
 	}
 
 	public AssignmentPage ClickAssignmentMenu(){
 		action.moveToElement(btnAssignment).click().build().perform();
-		return new AssignmentPage(driver);
+		return new AssignmentPage();
 	}
 	
 	public void ClickAttendanceMenu(){

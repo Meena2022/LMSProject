@@ -1,16 +1,16 @@
 package com.nn.pageObjects;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.nn.base.Base;
 
 
-public class LoginPage  {
-	WebDriver driver;
+
+public class LoginPage extends Base {
 	Actions action;
 
 	@FindBy(id="username")  WebElement txtUser;
@@ -18,9 +18,7 @@ public class LoginPage  {
 	@FindBy(xpath ="//button[@id='login']") WebElement btnLogin;
 
 	
-	public LoginPage(WebDriver ldriver) {
-		
-		this.driver=ldriver;
+	public LoginPage() {
 		action=new Actions(driver);
 		PageFactory.initElements(driver,this);
 	}
@@ -53,7 +51,7 @@ public class LoginPage  {
 	public HomePage ClkLoginButtonWithValidDet(String user,String password) {
 		SetLoginData(user,password);
 		action.moveToElement(btnLogin).click().build().perform();
-		return new HomePage(driver);
+		return new HomePage();
 	}
 	
 	public String ClkLoginButtonWithInValidDet(String user,String password) {

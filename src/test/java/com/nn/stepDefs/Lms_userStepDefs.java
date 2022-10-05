@@ -14,8 +14,6 @@ import com.nn.pageObjects.HomePage;
 import com.nn.pageObjects.LoginPage;
 import com.nn.pageObjects.UserPage;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
 public class Lms_userStepDefs extends Base{
@@ -24,21 +22,11 @@ public class Lms_userStepDefs extends Base{
 	HomePage homePage;
 	UserPage userPage;
 	
-	@Before
-	public void setupBrowser() {
-		SetupBrowser();
-		loginPage = new LoginPage(driver);
-		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
-		userPage=homePage.ClickUserMenu();
-	}
-	
-	@After
-	public void closeBrowser() {
-		BrowserTearDown();
-	}
-		
 	@Given("User is on User page")
 	public void user_is_on_user_page() throws InterruptedException {
+		loginPage = new LoginPage();
+		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
+		userPage=homePage.ClickUserMenu();
 		assertEquals("Not landed on User page","Manage User" , userPage.GetPageHeaderTitle());
 	
 	
@@ -46,7 +34,8 @@ public class Lms_userStepDefs extends Base{
 	
 	@When("User page display all the details")
 	public void user_page_display_all_the_details() {
-	
+		assertTrue("User page ", userPage.IsPageLoaded("User"));
+
 	}
 	
 	@Then("User should see the title of the User page as {string}")
@@ -93,7 +82,7 @@ public class Lms_userStepDefs extends Base{
 		List<String> ascendingButton = dataTable.asList(String.class);
 		List<String> resultList = new ArrayList<String>();
 		for (String fieldName : ascendingButton ) {
-			resultList=userPage.GetSortedOrder(fieldName);
+			resultList=userPage.GetUserSortedOrder(fieldName);
 			assertThat(resultList).isSorted();
 	
 		}

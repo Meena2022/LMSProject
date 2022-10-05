@@ -8,31 +8,23 @@ import java.util.Map;
 
 
 import com.nn.base.Base;
+import com.nn.pageObjects.HomePage;
 import com.nn.pageObjects.LoginPage;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
-public class Lms_loginStepDefs extends Base{
-	LoginPage loginPage;
-   
-	@Before
-	public void OpenBrowser() {
-		SetupBrowser();
-	}
+public class Lms_loginStepDefs extends Base {
 	
-	@After
-	public void CloseBrowser() {
-		BrowserTearDown();
-	}
+	LoginPage loginPage;
+	HomePage homePage;
+	
+	
 	
 	@Given("User is on the browser")
 	public void user_is_on_the_browser() {
-		loginPage=new LoginPage(driver);
+		loginPage=new LoginPage();
 		assertEquals("WebPage failed to load",appUrl, loginPage.getUrl() );
-
 	}
 
 	@When("User opens the LMS website")
@@ -72,7 +64,7 @@ public class Lms_loginStepDefs extends Base{
 		List<Map<String, String>> loginData = dataTable.asMaps(String.class,String.class);
 			String user = loginData.get(0).get("Username");
 			String pwd = loginData.get(0).get("Password");
-			loginPage.ClkLoginButtonWithValidDet(user, pwd);
+			homePage=loginPage.ClkLoginButtonWithValidDet(user, pwd);
 	}
 
 	@Then("User should see the LMS Home page")
