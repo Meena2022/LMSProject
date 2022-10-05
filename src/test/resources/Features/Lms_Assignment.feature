@@ -1,6 +1,6 @@
 Feature: Assignment Functionality
 
-Scenario: Check the Program page functionality of Header,Sort order,Footer and Pagination of Assignment page
+  Scenario: Check the Program page functionality of Header,Sort order,Footer and Pagination of Assignment page
     Given User is on Assignment page
     When Assignment page display all the details
     Then User should see the title of the Assignment page as "Manage Assignment"
@@ -21,8 +21,7 @@ Scenario: Check the Program page functionality of Header,Sort order,Footer and P
     Then User navigated to previous page number 1 on Assignment page
     When User is on last page of Assignment page
     Then pagination next link is disabled on Assignment page
-    
-    	
+
   Scenario Outline: Create a new Assignment
     Given User is on Assignment page
     When User clicks on A New Assignment button
@@ -30,11 +29,12 @@ Scenario: Check the Program page functionality of Header,Sort order,Footer and P
     And User enter Assignment details with "<Name>","<Description>" "<DueDate>" and "<Grade>"
     When User clicks on Assignment "<Confirmation>" button
     Then User gets Assignment save confirmation "<Message>"
-    And User lands on Manage Program
+    And User lands on Manage Assignment
 
     Examples: 
-      | Name           | Description | DueDate     | Grade | Confirmation | Message            |
+      | Name           | Description | DueDate   | Grade | Confirmation | Message            |
       | Sql Assignment | pl sql      | Jan052022 | A     | Save         | Assignment Created |
+      | Sql Assignment | pl sql      | Jan052022 | A     | Cancel       | NA                 |
 
   Scenario Outline: Edit a Assignment
     Given User is on Assignment page
@@ -46,8 +46,9 @@ Scenario: Check the Program page functionality of Header,Sort order,Footer and P
     And User lands on Manage Assignment
 
     Examples: 
-      | Name           | Description | DueDate     | Grade | Confirmation | Message            |  
-      | Sql Assignment | demo        | Jan052022 | B     | Save         | Assignment Updated |  
+      | Name           | Description | DueDate   | Grade | Confirmation | Message            |
+      | Sql Assignment | demo        | Jan052022 | B     | Save         | Assignment Updated |
+      | Sql Assignment | demo        | Jan052022 | B     | Cancel         | NA                 |
 
   Scenario Outline: Delete Single Assignment
     Given User is on Assignment page
@@ -73,11 +74,9 @@ Scenario: Check the Program page functionality of Header,Sort order,Footer and P
 
     Examples: 
       | Confirmation | Message          |
-      | Yes          | Programs Deleted |
+      | Yes          | Assignment Deleted |
 
   Scenario: Search box
     Given User is on Assignment page
     When User enters Assignment search content into search box "sql"
     Then User see the Assignment search result
-
- 

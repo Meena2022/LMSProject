@@ -17,8 +17,6 @@ import com.nn.pageObjects.LoginPage;
 import com.nn.pageObjects.ProgramPage;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
 import static org.assertj.core.api.Assertions.*;
@@ -32,27 +30,16 @@ public class Lms_programStepDefs extends Base {
 	ProgramSaveEditPage saveContentBox;
 	DeleteConfirmDialogBox deleteDialogBox;
 	int CheckBoxIdx;
+	String successMsg;
 	
-	@Before
-	public void setupBrowser() {
-		SetupBrowser();
-		loginPage = new LoginPage(driver);
-		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
-		programPage=homePage.ClickProgramMenu();
-
-	
-	}
-	
-	@After
-	public void closeBrowser() {
-		BrowserTearDown();
-	}
-		
 	
 	@Given("User is on Program page")
 	public void user_is_on_program_page() {
-		assertEquals("Not landed on Program page","Manage Program" , programPage.GetPageHeaderTitle());
-		assertTrue("Program page ", programPage.IsPageLoaded("Program"));
+		loginPage = new LoginPage();
+		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
+		programPage=homePage.ClickProgramMenu();
+		assertTrue("Not landed on Program page", programPage.IsPageLoaded("Program"));
+		assertEquals("Program page title is incorrect","Manage Program" , programPage.GetPageHeaderTitle());
 
 	}
 	
@@ -77,7 +64,7 @@ public class Lms_programStepDefs extends Base {
 	
 	@When("User clicks on Program {string} button")
 	public void user_clicks_on_program_save_button(String Confirm) {
-		saveContentBox.ClickConfirmation(Confirm);
+		successMsg=saveContentBox.ClickConfirmation(Confirm);
 	}
 
 	
@@ -86,11 +73,11 @@ public class Lms_programStepDefs extends Base {
 	@Then("User gets Program save confirmation {string}")
 	public void user_gets_program_save_confirmation(String Message) {
 		if (!Message.equals("NA")){
-			String actualMsg=programPage.GetSuccessMessage();
-			if (!actualMsg.contains(Message))  
-					assertEquals("Success message is not per requirement",Message, actualMsg); 
+			if (!successMsg.contains(Message))  
+				assertEquals("Success message is not per requirement",Message, successMsg); 
 			
 		}
+		
 	}
 
 
@@ -104,7 +91,7 @@ public class Lms_programStepDefs extends Base {
 	public void user_clicks_on_a_edit_button_of_program() {
 		int GetProgramRecordCount=programPage.GetRecordCount();
 		int idx=getRandomIndex(GetProgramRecordCount);
-		programPage.ClickSingleEditButton(idx); 
+		if (idx>=0)programPage.ClickSingleEditButton(idx); 
 	}
 	
 	@Then("user updates program details with {string},{string} and {string}")
@@ -117,7 +104,7 @@ public class Lms_programStepDefs extends Base {
 	public void user_select_the_single_program_checkbox()  {
 		int GetProgramRecordCount=programPage.GetRecordCount();
 		CheckBoxIdx=getRandomIndex(GetProgramRecordCount);
-		programPage.ClickSingleSelectCheckbox(CheckBoxIdx);
+		if (CheckBoxIdx>=0) programPage.ClickSingleSelectCheckbox(CheckBoxIdx);
 	}
 
 	@When("Click on relavent program delete button")
@@ -128,29 +115,26 @@ public class Lms_programStepDefs extends Base {
 
 	@Then("User lands on program delete confirmation page")
 	public void user_lands_on_program_delete_confirmation_page()  {
-		deleteDialogBox = new DeleteConfirmDialogBox(driver);
+		deleteDialogBox = new DeleteConfirmDialogBox();
 		
-		assertEquals("Not showing delete confirmation dialogu box","Confirm" , deleteDialogBox.GetDeleteDialogBoxTitle());
+		assertEquals("Not showing delete confirmation dialog box","Confirm" , deleteDialogBox.GetDeleteDialogBoxTitle());
 	}
 	
 	
 	@When("User clicks on Program delete dialog {string} button")
 	public void user_clicks_on_program_delete_dialog_button(String Confirmation) {
-		deleteDialogBox.ClickDeleteConfirmation(Confirmation);
+		successMsg=deleteDialogBox.ClickDeleteConfirmation(Confirmation);
 
 	}
 	
 	@Then("User gets confirmation for Program delete {string}")
-	public void user_gets_confirmation_for_program_delete(String Message) {
+	public void user_gets_confirmation_for_program_delete(String Message) throws InterruptedException {
 		if (!Message.equals("NA")){
-			String actualMsg=programPage.GetSuccessMessage();
-			if (!actualMsg.contains(Message))  
-				assertEquals("Sucess message is not per requirement",Message, actualMsg); 
-		
+			if (!successMsg.contains(Message))  
+				assertEquals("Sucess message is not per requirement",Message, successMsg); 
 			assertEquals("Not landed on Program page","Manage Program" , homePage.getPageHeaderTitle());
 		}
 	}
-
 
 	@When("User select the multiple program delete checkbox")
 	public void user_select_the_multiple_program_delete_checkbox() {
@@ -159,6 +143,8 @@ public class Lms_programStepDefs extends Base {
 
 	@When("Click on multiple program delete button")
 	public void click_on_multiple_program_delete_button() {
+		assertTrue("Multiple delete button is disabled", programPage.IsMultiDeleteIconEnabled());
+
 		programPage.ClickMultiDeleteIcon();
 	}
 	

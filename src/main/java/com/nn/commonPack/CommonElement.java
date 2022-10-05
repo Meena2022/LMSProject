@@ -3,23 +3,25 @@ package com.nn.commonPack;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-public class CommonElement {
+import com.nn.base.Base;
 
-	WebDriver driver;
+public class CommonElement extends Base {
+
 	Actions action;
 	
-	public CommonElement(WebDriver wdriver) {
-		driver=wdriver;
+	public CommonElement() {
 		action =new Actions(driver);
 		PageFactory.initElements(driver,this);
+		PageFactory.initElements(new AjaxElementLocatorFactory(driver,25), this);
+
+
 	}
 	
 	//Page Common Header Element
@@ -65,12 +67,16 @@ public class CommonElement {
 	})List<WebElement> iconEdit;
 		
 	@FindBys({
-		@FindBy(xpath = "//button[@icon='pi pi-trash']") 
+		@FindBy(xpath = "//mat-card-content//button[@icon='pi pi-trash']") 
 	})List<WebElement> iconDelete;
 	
 	//Footer Element
 	
 	@FindBy(xpath = "//p-paginator//div/span") WebElement lblPaginationEntries;
+	@FindBys({
+		@FindBy(xpath = "//p-paginator//span/button") 
+	})List<WebElement> PageNoButtonList;
+	
 	@FindBy(xpath = "//p-paginator//span/button[1]") WebElement btnFirstpage;
 	@FindBy(xpath = "//p-paginator//span/button[2]") WebElement btnSecondpage;
 	@FindBy(xpath = "//p-paginator//div/button[2]") WebElement btnPreviouspage;
@@ -87,7 +93,6 @@ public class CommonElement {
 	public boolean IsPageLoaded(String Page) {
 		List<String> tblHeading = new ArrayList<String>();
 		tblHeading=prepareList(PageGridTable);
-		System.out.println(tblHeading +"   "+Page);
 		if (Page.equalsIgnoreCase("Program")) {
 			if (tblHeading.contains("Program Name") && tblHeading.contains("Program Status")){
 				return true;}
@@ -102,7 +107,7 @@ public class CommonElement {
 		}
 		
 		if (Page.equalsIgnoreCase("User")) {
-			if (tblHeading.contains("Id") && tblHeading.contains("Email") && tblHeading.contains("Contact")){
+			if (tblHeading.contains("ID") && tblHeading.contains("Email Address") && tblHeading.contains("Contact Number")){
 				return true;}
 		}
 		return false;
@@ -115,6 +120,7 @@ public class CommonElement {
 	public String GetAddButtonText() {
 		return lblAddnew.getText();
 	}
+	
 	public void ClickMultiDeleteIcon() {
 		action.moveToElement(iconMultipleDelete).click().build().perform();
 	}
@@ -149,8 +155,8 @@ public class CommonElement {
 		List<String> sortedtList = new ArrayList<String>();
 		for(WebElement item:btnSort){
 			String fields= item.getDomAttribute("field");
-			System.out.println(item.getDomAttribute("field")+fieldClicked);
 			action.moveToElement(item).click().build().perform();
+			
 				if (fieldClicked.contains("Name")&& fields.contains("Name") ){
 					fields= item.getDomAttribute("field");
 					sortedtList= prepareList(sortedProgramNameList);
@@ -166,10 +172,32 @@ public class CommonElement {
 					sortedtList= prepareList(sortedProgramStatusList);
 					return sortedtList;
 				}
+				
 		} 
 		return sortedtList;
 	}
+	
+	public List<String> GetUserSortedOrder(String fieldClicked)  {
+		List<String> sortedtList = new ArrayList<String>();
+		for(WebElement item:btnSort){
+			String fields= item.getDomAttribute("field");
+			action.moveToElement(item).click().build().perform();
+			
+				if (fieldClicked.contains("ID")&& fields.contains("id") ){
+					fields= item.getDomAttribute("field");
+					sortedtList= prepareList(sortedProgramNameList);
+					return sortedtList;
+				}
+				if(fieldClicked.contains("Name") && fields.contains("Name")) {
+					fields= item.getDomAttribute("field");
+					sortedtList= prepareList(sortedProgramDescList);
+					return sortedtList;
+				}
+				
+		} 
+		return sortedtList;
 
+	}
 	
 
 	
@@ -178,6 +206,7 @@ public class CommonElement {
 	
 	
 	public int GetRecordCount() {
+		
 		return PageGridDetail.size();
 	}
 	
@@ -207,22 +236,31 @@ public class CommonElement {
 	
 	
 	public boolean IsFirstpageLoaded() {
-		action.moveToElement(btnFirstpage).click().build().perform();
-		return btnFirstpage.isEnabled();
+		if (PageNoButtonList.size()>=1) {
+			action.moveToElement(btnFirstpage).click().build().perform();
+			return btnFirstpage.isEnabled();
+		}
+		return false;
 	}
 	public boolean IsFirstpageButtonEnabled() {
-		return btnFirstpage.isEnabled();
+		if (PageNoButtonList.size()>=1) return btnFirstpage.isEnabled();
+		return false;
 	}
 	public boolean IsSecondpageLoaded() {
-		return btnSecondpage.isEnabled();
+		if (PageNoButtonList.size()>1) return btnSecondpage.isEnabled();
+		return false;
 	}
 	
 	public boolean IsSecondPageButtonEnabled() {
-		return btnSecondpage.isEnabled();
+		if (PageNoButtonList.size()>1) return btnSecondpage.isEnabled();
+		return false;
+
+		
 	}
 	
 	public void ClickPreviousNavigationButton() {
-		action.moveToElement(btnPreviouspage).click().build().perform();
+		if (PageNoButtonList.size()>1) 
+			action.moveToElement(btnPreviouspage).click().build().perform();
 	}
 	public boolean IsPreviouNavigationDisabled() {
 		return btnPreviouspage.isEnabled();
@@ -232,20 +270,17 @@ public class CommonElement {
 		return btnNextpage.isEnabled();
 	}
 	public void ClickNextNavigationButton() {
-		action.moveToElement(btnNextpage).click().build().perform();
+		if (PageNoButtonList.size()>1) action.moveToElement(btnNextpage).click().build().perform();
 	}
 
 	public void ClickLastNavigationButton() {
-		action.moveToElement(btnLastspage).click().build().perform();
+		if (PageNoButtonList.size()>1) action.moveToElement(btnLastspage).click().build().perform();
 	}
 	
-	//Success Message Popup
 	
-	public String GetSuccessMessage() {
-		WebElement MsgElement = driver.findElement(By.xpath("//p-toast//p-toastitem"));
-		String Msg = MsgElement.getText();
-		return Msg;
-	}
+	
+	
+	
 	//Method
 	private List<String> prepareList(List<WebElement> we){
 		List<String> sortList = new ArrayList<String>();

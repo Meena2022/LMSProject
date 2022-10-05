@@ -17,8 +17,6 @@ import com.nn.pageObjects.AssignmentPage;
 import com.nn.pageObjects.HomePage;
 import com.nn.pageObjects.LoginPage;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
 public class Lms_assignmentStepDefs extends Base{
@@ -32,26 +30,16 @@ public class Lms_assignmentStepDefs extends Base{
 	AssignmentSaveEditPage saveContentBox;
 	DeleteConfirmDialogBox deleteDialogBox;
 	int CheckBoxIdx;
-	
-	@Before
-	public void setupBrowser() {
-		SetupBrowser();
-		loginPage = new LoginPage(driver);
-		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
-		assignPage=homePage.ClickAssignmentMenu();
-	}
-	
-	@After
-	public void closeBrowser() {
-		BrowserTearDown();
-	}
-	
-	
+	String actualMsg;
+
 	
 	@Given("User is on Assignment page")
 	public void user_is_on_assignment_page() {
-		assertEquals("Not landed on Assignment page","Manage Assignment" , assignPage.GetPageHeaderTitle());
+		loginPage = new LoginPage();
+		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
+		assignPage=homePage.ClickAssignmentMenu();
 		assertTrue("Program page ", assignPage.IsPageLoaded("Assignment"));
+		assertEquals("Not landed on Assignment page","Manage Assignment" , assignPage.GetPageHeaderTitle());
 	
 	}
 	
@@ -63,9 +51,10 @@ public class Lms_assignmentStepDefs extends Base{
 	
 	@Then("User lands on Assignment Details form")
 	public void user_lands_on_assignment_details_form() {
-		saveContentBox = new AssignmentSaveEditPage(driver);
-		assertTrue("Assignment detail form not loaded",saveContentBox.IsProgramDialogVisible());
-		assertEquals("Not landed on Assignment dialog box","Assignment Details" , saveContentBox.getDetailFormTitle());
+		saveContentBox = new AssignmentSaveEditPage();
+		assertTrue("Not landed on Assignment dialog box",saveContentBox.IsDialogVisible());
+		
+		//assertEquals("Assignment detail form title is incorrect","Assignment Details" , saveContentBox.getDetailFormTitle());
 	}
 	
 	
@@ -77,31 +66,32 @@ public class Lms_assignmentStepDefs extends Base{
 	
 	@When("User clicks on Assignment {string} button")
 	public void user_clicks_on_assignment_button(String Confirm) {
-		saveContentBox.ClickConfirmation(Confirm);
+		actualMsg=saveContentBox.ClickConfirmation(Confirm);
 	
 	}
 	
 	@Then("User gets Assignment save confirmation {string}")
-	public void user_gets_assignment_save_confirmation(String Message) {
+	public void user_gets_assignment_save_confirmation(String Message) throws InterruptedException {
 		if (!Message.equals("NA")){
-			String actualMsg=assignPage.GetSuccessMessage();
 			if (!actualMsg.contains(Message))  
 					assertEquals("Success message is not per requirement",Message, actualMsg); 
 			
 		}
+		//assertEquals("Not landed on Assignment page","Manage Assignment" , homePage.getPageHeaderTitle());
+
 	}
 	
 	@When("User clicks on a Edit button of Assignment")
 	public void user_clicks_on_a_edit_button_of_assignment() {
-		int GetProgramRecordCount=assignPage.GetRecordCount();
-		int idx=getRandomIndex(GetProgramRecordCount);
-		assignPage.ClickSingleEditButton(idx); 
+		int GetRecordCount=assignPage.GetRecordCount();
+		if (GetRecordCount >0 ) {
+			int idx=getRandomIndex(GetRecordCount);
+			assignPage.ClickSingleEditButton(idx); 
+		}
+		
 	}
 	
-	
-	
-	
-	
+
 	@Then("user updates Assignment details with {string},{string},{string} and {string}")
 	public void user_updates_assignment_details_with_and(String Name, String Desc, String Duedate, String Grade) {
 		saveContentBox.EnterAssignmentDetails(Name, Desc, Duedate,Grade);
@@ -110,56 +100,56 @@ public class Lms_assignmentStepDefs extends Base{
 	
 	@Then("User lands on Manage Assignment")
 	public void user_lands_on_manage_assignment() {
-		assertEquals("Not landed on Assignment page","Manage Assignment" , assignPage.GetPageHeaderTitle());
+		assertEquals("Not landed on Assignment page","Manage Assignment" , homePage.getPageHeaderTitle());
 	
 	}
 	
 	@When("User select the single Assignment checkbox")
 	public void user_select_the_single_assignment_checkbox() {
-		int GetProgramRecordCount=assignPage.GetRecordCount();
-		CheckBoxIdx=getRandomIndex(GetProgramRecordCount);
-		assignPage.ClickSingleSelectCheckbox(CheckBoxIdx);
+		int GetRecordCount=assignPage.GetRecordCount();
+		if (GetRecordCount >0 ) {
+			CheckBoxIdx=getRandomIndex(GetRecordCount);
+			assignPage.ClickSingleSelectCheckbox(CheckBoxIdx);
+		}
 	}
 	
 	@When("Click on relavent Assignment delete button")
 	public void click_on_relavent_assignment_delete_button() {
 		assignPage.ClickSingleDeleteIcon(CheckBoxIdx);
-	
+
 	}
 	
 	@Then("User lands on Assignment delete confirmation page")
 	public void user_lands_on_assignment_delete_confirmation_page() {
-		deleteDialogBox = new DeleteConfirmDialogBox(driver);
-		
+		deleteDialogBox = new DeleteConfirmDialogBox();
 		assertEquals("Not showing delete confirmation dialogu box","Confirm" , deleteDialogBox.GetDeleteDialogBoxTitle());
 	}
 	
 	@When("User clicks on Assignment delete dialog {string} button")
 	public void user_clicks_on_assignment_delete_dialog_button(String Confirmation) {
-		deleteDialogBox.ClickDeleteConfirmation(Confirmation);
+		actualMsg=deleteDialogBox.ClickDeleteConfirmation(Confirmation);
 	
 	}
 	
 	@Then("User gets confirmation for Assignment delete {string}")
-	public void user_gets_confirmation_for_assignment_delete(String Message) {
+	public void user_gets_confirmation_for_assignment_delete(String Message) throws InterruptedException {
 		if (!Message.equals("NA")){
-			String actualMsg=assignPage.GetSuccessMessage();
 			if (!actualMsg.contains(Message))  
 				assertEquals("Sucess message is not per requirement",Message, actualMsg); 
-		
-			assertEquals("Not landed on Assignment page","Manage Assignment" , homePage.getPageHeaderTitle());
 		}
+		assertEquals("Not landed on Assignment page","Manage Assignment" , homePage.getPageHeaderTitle());
+
 	}
 	
 	@When("User select the multiple Assignment delete checkbox")
 	public void user_select_the_multiple_assignment_delete_checkbox() {
-		
 		assignPage.ClickMutiSelectCheckBox();
 	
 	}
 	
 	@When("Click on multiple Assignment delete button")
 	public void click_on_multiple_assignment_delete_button() {
+		assertTrue("Multiple delete button is disabled", assignPage.IsMultiDeleteIconEnabled());
 		assignPage.ClickMultiDeleteIcon();
 	
 	}
@@ -183,7 +173,7 @@ public class Lms_assignmentStepDefs extends Base{
 	
 	@Then("User should see the title of the Assignment page as {string}")
 	public void user_should_see_the_title_of_the_assignment_page_as(String string) {
-		 assertEquals("Page title is not pre requirement", assignPage,homePage.getPageHeaderTitle() );
+		 assertEquals("Page title is not pre requirement","Manage Assignment" ,assignPage.GetPageHeaderTitle() );
 	
 	}
 	

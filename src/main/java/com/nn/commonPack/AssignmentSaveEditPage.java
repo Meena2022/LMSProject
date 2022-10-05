@@ -1,14 +1,17 @@
 package com.nn.commonPack;
 
 
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class AssignmentSaveEditPage {
-	WebDriver driver;
+import com.nn.base.Base;
+
+public class AssignmentSaveEditPage extends Base{
+	//WebDriver driver;
 	Actions action;
 	
 	@FindBy(id="assignment") WebElement txtAssignment;
@@ -26,9 +29,7 @@ public class AssignmentSaveEditPage {
 	@FindBy(xpath="//div[@role='dialog']") WebElement PageDialog;
 	@FindBy(xpath="//p-dialog//div[@role='dialog']/div/span") WebElement lblDialogTitle;
 
-	public AssignmentSaveEditPage(WebDriver wdriver) {
-		System.out.println("Home page constructor");
-		driver=wdriver;
+	public AssignmentSaveEditPage( ) {
 		action =new Actions(driver);
 
 		PageFactory.initElements(driver,this);
@@ -36,8 +37,8 @@ public class AssignmentSaveEditPage {
 	
 	
 						
-	public boolean IsProgramDialogVisible() {
-
+	public boolean IsDialogVisible() {
+		Wdwait.until(ExpectedConditions.visibilityOf(PageDialog));
 		return PageDialog.isDisplayed();
 	}
 
@@ -55,13 +56,21 @@ public class AssignmentSaveEditPage {
 		
 	}
 	
-	public void ClickConfirmation(String status)  {
-
+	
+	public String ClickConfirmation(String status)  {
+		
 		if (status.equalsIgnoreCase("Save")) {
 			action.moveToElement(btnSave).click().build().perform();
+			Wdwait.until(ExpectedConditions.invisibilityOf(btnSave));
+			WebElement MsgElement = driver.findElement(By.xpath("//p-toast//p-toastitem"));
+			return MsgElement.getText();
 		}
 		if (status.equalsIgnoreCase("Cancel")){
 			action.moveToElement(btnCancel).click().build().perform();
 		}
+		
+		return "NA";
+
+		
 	}
 }

@@ -13,8 +13,6 @@ import com.nn.pageObjects.HomePage;
 import com.nn.pageObjects.LoginPage;
 import com.nn.pageObjects.UserPage;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import io.cucumber.datatable.DataTable;
 
@@ -27,20 +25,10 @@ public class Lms_homeStepDefs extends Base {
 	AssignmentPage assignmentPage;
 	UserPage userPage;
 	
-	@Before
-	public  void openBrowser() {
-		SetupBrowser();		
-	}
-	
-	@After
-	public void closeBrowser() {
-		BrowserTearDown();
-	}
-	
 	@Given("User is logged on to LMS website")
 	public void user_is_logged_on_to_lms_website()  {
 		
-		loginPage = new LoginPage(driver);
+		loginPage = new LoginPage();
 
 		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
 	}
@@ -75,8 +63,8 @@ public class Lms_homeStepDefs extends Base {
 	
 	@Given("User logged on and landed on Home page")
 	public void user_logged_on_and_landed_on_home_page() {
-		loginPage = new LoginPage(driver);
-		homePage= new HomePage(driver);
+		loginPage = new LoginPage();
+		homePage= new HomePage();
 		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
 	}
 

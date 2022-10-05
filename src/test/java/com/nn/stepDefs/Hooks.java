@@ -1,28 +1,35 @@
 package com.nn.stepDefs;
 
+import java.time.Duration;
 
-public class Hooks {
-	/*
-	private Base b;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.nn.base.Base;
+
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+
+public class Hooks extends Base {
 	
-	public Hooks(Base b) {
-		this.b = b;
-	}
-
 	@Before
-	public void initDriver() {
-		//System.out.println("Open browser");
-		//System.setProperty("webdriver.chrome.driver", "lib/chromedriver 3");
+	public void OpenBrowser() {
 		WebDriverManager.chromedriver().setup();
-		b.driver.get(appUrl);
-		b.driver = new ChromeDriver();
-		b.driver.manage().window().maximize();
-		//b.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver=new ChromeDriver();
+		driver.get(appUrl);
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
+		Wdwait = new WebDriverWait(driver,Duration.ofSeconds(15));
+		driver.manage().window().maximize();
 	}
-
-	@After
-	public void teardown() {
-		System.out.println("Close browser");
-		b.driver.quit();
-	}*/
+	
+	
+	
+	@After 
+	public void CloseBrowser() {
+		driver.close();
+		driver.quit();
+	}
+	
 }

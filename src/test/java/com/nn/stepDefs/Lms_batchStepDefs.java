@@ -17,8 +17,6 @@ import com.nn.pageObjects.BatchPage;
 import com.nn.pageObjects.HomePage;
 import com.nn.pageObjects.LoginPage;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
 public class Lms_batchStepDefs extends Base{
@@ -29,24 +27,14 @@ public class Lms_batchStepDefs extends Base{
 	BatchSaveEditPage saveContentBox;
 	DeleteConfirmDialogBox deleteDialogBox;
 	int CheckBoxIdx;
-	
-	@Before
-	public void setupBrowser() {
-		SetupBrowser();
-		loginPage = new LoginPage(driver);
-		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
-		batchPage=homePage.ClickBatchMenu();
-	}
-	
-	@After
-	public void closeBrowser() {
-		BrowserTearDown();
-	}
-		
+	String actualMsg;
 	
 
 	@Given("User is on Batch Details page by clicking on A New Batch button in Manage Batch Page")
 	public void user_is_on_batch_details_page_by_clicking_on_a_new_batch_button_in_manage_batch_page() {
+		loginPage = new LoginPage();
+		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
+		batchPage=homePage.ClickBatchMenu();
 		assertEquals("Not landed on Batch page","Manage Batch" , batchPage.GetPageHeaderTitle());
 		assertTrue("Batch page ", batchPage.IsPageLoaded("Batch"));
 		batchPage.ClickNewButton();
@@ -54,42 +42,41 @@ public class Lms_batchStepDefs extends Base{
 
 	@When("User enters {string}, {string},select {string} , {string}, and {int} of Batch")
 	public void user_enters_select_and_of_batch(String BatchName, String BatchDescription, String ProgramName, String BatchStatus, Integer NoofClasses)   {
-	    
-		saveContentBox = new BatchSaveEditPage(driver);
-		assertTrue("Batch detail form not loaded",saveContentBox.IsPrageeDialogVisible());
+		saveContentBox = new BatchSaveEditPage();
+		assertTrue("Batch detail form not loaded",saveContentBox.IsPageDialogVisible());
 		assertEquals("Batch detail form not loaded","Batch Details" , saveContentBox.getDetailFormTitle());
-		saveContentBox.setBatchName(BatchName);
-		saveContentBox.setBatchDesc(BatchDescription);
-		saveContentBox.selectBatchProgram(ProgramName);
-		saveContentBox.clickRadActive();
-		saveContentBox.selectBatchStatus();
-		saveContentBox.setBatchNoClasses(NoofClasses);
-		
+		saveContentBox.addBatch(BatchName, BatchDescription, ProgramName, BatchStatus, NoofClasses);
 	}
 
 	@When("click save button")
 	public void click_save_button() {
-		
-		saveContentBox.clickSave(); 
+		actualMsg=saveContentBox.clickSave(); 
+
 	}
 
 	@Then("User gets alert message {string}")
-	public void user_gets_alert_message(String Message) {
-		String actualMsg=batchPage.GetSuccessMessage();
+	public void user_gets_alert_message(String Message) throws InterruptedException {
 		if (!actualMsg.contains(Message))  
 				assertEquals("Success message is not per requirement",Message, actualMsg);
 	}
 
 	@Then("User lands on Manage Batch page")
 	public void user_lands_on_manage_batch_page() {
-		assertEquals("Not landed on Program page","Manage Batch" , batchPage.GetPageHeaderTitle());
+		assertEquals("Batch detail form heading is incorrect","Manage Batch" , batchPage.GetPageHeaderTitle());
 	}
 
 	@Given("User is on Batch Details page by clicking on edit icon in Manage Batch Page")
 	public void user_is_on_batch_details_page_by_clicking_on_edit_icon_in_manage_batch_page() {
-		int GetProgramRecordCount=batchPage.GetRecordCount();
-		int idx=getRandomIndex(GetProgramRecordCount);
-		batchPage.ClickSingleEditButton(idx); 
+		loginPage = new LoginPage();
+		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
+		batchPage=homePage.ClickBatchMenu();
+		assertTrue("Batch page loaded ", batchPage.IsPageLoaded("Batch"));
+
+		int GetRecordCount=batchPage.GetRecordCount();
+		if (GetRecordCount>0) {
+			int idx=getRandomIndex(GetRecordCount);
+			batchPage.ClickSingleEditButton(idx);
+		} 
 	}
 
 
@@ -97,30 +84,41 @@ public class Lms_batchStepDefs extends Base{
 
 	@Given("User is on Batch Details page  by clicking on delete icon in Manage Batch Page")
 	public void user_is_on_batch_details_page_by_clicking_on_delete_icon_in_manage_batch_page() {
-		int GetProgramRecordCount=batchPage.GetRecordCount();
-		CheckBoxIdx=getRandomIndex(GetProgramRecordCount);
-		batchPage.ClickSingleSelectCheckbox(CheckBoxIdx);
+		loginPage = new LoginPage();
+		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
+		batchPage=homePage.ClickBatchMenu();
+		assertTrue("Batch page loaded", batchPage.IsPageLoaded("Batch"));
+
+		int GetRecordCount=batchPage.GetRecordCount();
+		if (GetRecordCount>0) {
+			CheckBoxIdx=getRandomIndex(GetRecordCount);
+			batchPage.ClickSingleDeleteIcon(CheckBoxIdx);
+		}
+		
 	}
 
 	@When("User clicks on particular batch delete icon and click Yes button in alert message")
 	public void user_clicks_on_particular_batch_delete_icon_and_click_yes_button_in_alert_message() {
-		batchPage.ClickSingleDeleteIcon(CheckBoxIdx);
-		deleteDialogBox = new DeleteConfirmDialogBox(driver);
-		assertEquals("Not showing delete confirmation dialog box","Confirm" , deleteDialogBox.GetDeleteDialogBoxTitle());
-		deleteDialogBox.ClickDeleteConfirmation("Yes");
+		deleteDialogBox = new DeleteConfirmDialogBox();
 
+		assertEquals("Not showing delete confirmation dialog box","Confirm" , deleteDialogBox.GetDeleteDialogBoxTitle());
+		actualMsg=deleteDialogBox.ClickDeleteConfirmation("Yes");
 	}
 
 	@Then("User gets an alert message {string}")
-	public void user_gets_an_alert_message(String Message) {
-		String actualMsg=batchPage.GetSuccessMessage();
+	public void user_gets_an_alert_message(String Message) throws InterruptedException {
 		if (!actualMsg.contains(Message))  
 				assertEquals("Success message is not per requirement",Message, actualMsg); 
 	}
 
 	@Given("User is on Manage Batch Page")
 	public void user_is_on_manage_batch_page() {
+		loginPage = new LoginPage();
+		homePage=loginPage.ClkLoginButtonWithValidDet(userName, userPwd);
+		batchPage=homePage.ClickBatchMenu();
 		assertEquals("Not landed on Batch page","Manage Batch" , batchPage.GetPageHeaderTitle());
+		assertTrue("Batch page ", batchPage.IsPageLoaded("Batch"));
+
 	}
 
 	@When("User enters the text {string}  and click search icon in the text box")
@@ -137,22 +135,20 @@ public class Lms_batchStepDefs extends Base{
 	
 	@Then("Click on multiple batch delete button")
 	public void click_on_multiple_batch_delete_button() {
+		assertTrue("Multiple delete button is disabled", batchPage.IsMultiDeleteIconEnabled());
+
 		batchPage.ClickMultiDeleteIcon();
-		deleteDialogBox = new DeleteConfirmDialogBox(driver);
-		deleteDialogBox.ClickDeleteConfirmation("Yes");
+		deleteDialogBox = new DeleteConfirmDialogBox();
+		assertEquals("Not showing delete confirmation dialog box","Confirm" , deleteDialogBox.GetDeleteDialogBoxTitle());
 
-	   
+		actualMsg=deleteDialogBox.ClickDeleteConfirmation("Yes");
+   
 	}
 
-	@Given("User is on Batch page")
-	public void user_is_on_batch_page() {
-		assertEquals("Not landed on Batch page","Manage Batch" , batchPage.GetPageHeaderTitle());
-		assertTrue("Batch page ", batchPage.IsPageLoaded("Batch"));
-	}
-	
 	@When("Batch page display all the details")
 	public void batch_page_display_all_the_details() {
-	    
+		assertTrue("Batch page ", batchPage.IsPageLoaded("Batch"));
+
 	}
 
 	@Then("User should see the title of the Batch page as {string}")
